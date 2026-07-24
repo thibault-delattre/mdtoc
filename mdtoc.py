@@ -32,7 +32,9 @@ def extract_headers(lines: list[str]) -> list[tuple[int, str]]:
     return headers
 
 
-def build_toc(headers: list[tuple[int, str]]) -> str:
+def build_toc(headers: list[tuple[int, str]], max_level: int | None = None) -> str:
+    if max_level is not None:
+        headers = [(level, title) for level, title in headers if level <= max_level]
     if not headers:
         return ""
     min_level = min(level for level, _ in headers)
@@ -47,13 +49,16 @@ def build_toc(headers: list[tuple[int, str]]) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate a Markdown table of contents from headers.")
     parser.add_argument("file", help="Path to the Markdown file")
+    parser.add_argument(
+        "--max-level", type=int, default=None, help="Only include headers up to this depth (e.g. 2 for # and ##)"
+    )
     args = parser.parse_args(argv)
 
     with open(args.file, encoding="utf-8") as f:
         lines = f.readlines()
 
     headers = extract_headers(lines)
-    toc = build_toc(headers)
+    toc = build_toc(headers, max_level=args.max_level)
     if toc:
         print(toc)
     return 0

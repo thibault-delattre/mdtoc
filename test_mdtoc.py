@@ -28,3 +28,9 @@ def test_build_toc_nesting():
 
 def test_build_toc_empty():
     assert build_toc([]) == ""
+
+
+def test_build_toc_max_level():
+    headers = [(1, "Intro"), (2, "Sub Section"), (3, "Detail")]
+    toc = build_toc(headers, max_level=2)
+    assert toc == "- [Intro](#intro)\n  - [Sub Section](#sub-section)"
