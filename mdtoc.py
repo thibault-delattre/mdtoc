@@ -7,6 +7,8 @@ import sys
 
 HEADER_RE = re.compile(r"^(#{1,6})\s+(.*)")
 
+__version__ = "0.2.0"
+
 
 def slugify(text: str) -> str:
     slug = text.strip().lower()
@@ -52,6 +54,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--max-level", type=int, default=None, help="Only include headers up to this depth (e.g. 2 for # and ##)"
     )
+    parser.add_argument("--version", action="version", version=f"mdtoc {__version__}")
     args = parser.parse_args(argv)
 
     with open(args.file, encoding="utf-8") as f:
